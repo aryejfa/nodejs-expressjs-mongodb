@@ -4,6 +4,7 @@
   <body>
     <%- include('../../components/navbar') %>
     <h2>Form Create Users</h2>
+    <a href="/users">Back</a>
     <form method="post" action="/users_update">
       <div class="input-group">
         <label>
@@ -17,7 +18,7 @@
         </label>
       </div>
       <button type="submit">Submit</button>
-      <a href="/users">Back</a>
+      <a href="/delete/<%=users._id %>">Delete</a>
     </form>
     <%- include('../../components/footer') %>
   </body>
