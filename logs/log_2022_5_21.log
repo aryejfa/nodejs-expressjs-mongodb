@@ -28,3 +28,21 @@ info: Jun-21-2022 15:13:18: 	{
 	"email": "aryejfa@gmail.com",
 	"status": "Delete user"
 }
+info: Jun-21-2022 16:44:11: 	{
+	"_id": "62b192bdd425b3e297e80c65",
+	"name": "Ary",
+	"email": "aryejfa@gmail.com",
+	"status": "Delete user"
+}
+info: Jun-21-2022 17:29:15: 	{
+	"_id": "62b192afd425b3e297e80c63",
+	"name": "Ary",
+	"email": "aryejfa@gmail.com",
+	"status": "Update user"
+}
+info: Jun-21-2022 17:30:06: 	{
+	"_id": "62b192afd425b3e297e80c63",
+	"name": "Ary1",
+	"email": "aryejfa1@gmail.com",
+	"status": "Update user"
+}

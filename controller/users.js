@@ -3,13 +3,22 @@ const { v4: uuidv4 } = require("uuid");
 const User = require("../model/users");
 const logger = require("../utils/Logger");
 
+const redis = require("redis");
+const client = redis.createClient({
+  host: "127.0.0.1",
+  port: 6379,
+});
+client.on("connect", () => console.log("Connected to Redis!"));
+client.on("error", (err) => console.log("Redis Client Error", err));
+client.connect();
+
 // let users = [
 //   { id: "1", name: "EKO", email: "eko@gmail.com" },
 //   { id: "2", name: "JAYA", email: "jaya@gmail.com" },
 // ];
 
 module.exports = {
-  index: (req, res) => {
+  index: async (req, res) => {
     // if (users.length > 0) {
     //   res.json({
     //     status: true,
@@ -39,15 +48,32 @@ module.exports = {
     //   res.render("pages/users/index", { users });
     // });
 
-    const query = User.find(keyword);
-    query.select("name _id");
-    query.exec(function (err, data) {
-      if (err) return handleError(err);
-      console.log(data);
+    const redisKey = "redisUsers";
 
-      const users = data;
-      res.render("pages/users/index", { users });
-    });
+    const dataUser = await client.get(redisKey);
+
+    if (dataUser) {
+      const users = dataUser;
+
+      console.log("From redis");
+      res.render("pages/users/index", { users: JSON.parse(users) });
+    } else {
+      const query = User.find(keyword);
+      query.select("name _id");
+      query.exec(async (err, data) => {
+        if (err) return handleError(err);
+        console.log(data);
+        const users = data;
+
+        const insertRedis = await client.set(redisKey, JSON.stringify(users), {
+          EX: 60,
+        });
+        if (insertRedis) {
+          console.log("From No SQL");
+          res.render("pages/users/index", { users });
+        }
+      });
+    }
   },
   create: (req, res) => {
     res.render("pages/users/create");
