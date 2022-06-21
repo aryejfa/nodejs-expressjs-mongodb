@@ -148,13 +148,26 @@ module.exports = {
   },
   delete: (req, res) => {
     const id = req.params.userId;
-    users = users.filter((user) => user.id != id);
-    res.json({
-      status: true,
-      method: req.method,
-      url: req.url,
-      message: "Succes delete data",
-      data: users,
-    });
+    // users = users.filter((user) => user.id != id);
+    // res.json({
+    //   status: true,
+    //   method: req.method,
+    //   url: req.url,
+    //   message: "Succes delete data",
+    //   data: users,
+    // });
+
+    User.findOneAndRemove(
+      {
+        _id: id,
+      },
+      function (err, user) {
+        if (err) throw err;
+
+        console.log("Success");
+      }
+    );
+
+    res.redirect("../users");
   },
 };
