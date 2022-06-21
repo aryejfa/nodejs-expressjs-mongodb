@@ -7,13 +7,13 @@
     <form method="post" action="/users_update">
       <div class="input-group">
         <label>
-          <input type="hidden" name="id" value="<%=users[0].id %>" />
-          <input type="text" name="name" value="<%=users[0].name %>" />
+          <input type="hidden" name="id" value="<%=users._id %>" />
+          <input type="text" name="name" value="<%=users.name %>" />
         </label>
       </div>
       <div class="input-group">
         <label>
-          <input type="email" name="email" value="<%=users[0].email %>" />
+          <input type="email" name="email" value="<%=users.email %>" />
         </label>
       </div>
       <button type="submit">Submit</button>

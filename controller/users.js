@@ -1,9 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 
-let users = [
-  { id: "1", name: "EKO", email: "eko@gmail.com" },
-  { id: "2", name: "JAYA", email: "jaya@gmail.com" },
-];
+const User = require("../model/users");
+
+// let users = [
+//   { id: "1", name: "EKO", email: "eko@gmail.com" },
+//   { id: "2", name: "JAYA", email: "jaya@gmail.com" },
+// ];
 
 module.exports = {
   index: (req, res) => {
@@ -20,17 +22,65 @@ module.exports = {
     //     message: "Data is empty",
     //   });
     // }
-    res.render("pages/users/index", { users });
+
+    let keyword = {};
+
+    if (req.query.keyword) {
+      keyword = { name: { $regex: req.query.keyword } };
+    }
+
+    // User.find(keyword, "name _id", function (err, data) {
+    //   if (err) return handleError(err);
+    //   console.log(data);
+
+    //   const users = data;
+
+    //   res.render("pages/users/index", { users });
+    // });
+
+    const query = User.find(keyword);
+    query.select("name _id");
+    query.exec(function (err, data) {
+      if (err) return handleError(err);
+      console.log(data);
+
+      const users = data;
+
+      res.render("pages/users/index", { users });
+    });
   },
   create: (req, res) => {
     res.render("pages/users/create");
   },
   store: (req, res) => {
-    users.push({
-      id: uuidv4(),
-      name: req.body.name,
-      email: req.body.email,
-    });
+    // users.push({
+    //   id: uuidv4(),
+    //   name: req.body.name,
+    //   email: req.body.email,
+    // });
+
+    // const user = new User({
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   password: req.body.password,
+    // });
+
+    // user.save(function (err, data) {
+    //   if (err) return handleError(err);
+    //   console.log(data);
+    // });
+
+    User.create(
+      {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+      },
+      function (err, data) {
+        if (err) return handleError(err);
+        console.log(data);
+      }
+    );
 
     res.redirect("users");
 
@@ -44,11 +94,16 @@ module.exports = {
   },
   show: (req, res) => {
     const id = req.params.userId;
-    const data = users.filter((user) => {
-      return user.id == id;
-    });
+    // const data = users.filter((user) => {
+    //   return user.id == id;
+    // });
 
-    res.render("pages/users/show", { users: data });
+    User.findById(id, function (err, data) {
+      if (err) return handleError(err);
+      console.log(data);
+
+      res.render("pages/users/show", { users: data });
+    });
   },
   update: (req, res) => {
     // const id = req.params.userId;
@@ -69,17 +124,27 @@ module.exports = {
     // });
 
     const id = req.body.id;
-    users.filter((user) => {
-      if (user.id == id) {
-        user.id = id;
-        user.name = req.body.name;
-        user.email = req.body.email;
+    // users.filter((user) => {
+    //   if (user.id == id) {
+    //     user.id = id;
+    //     user.name = req.body.name;
+    //     user.email = req.body.email;
 
-        return user;
+    //     return user;
+    //   }
+    // });
+
+    User.update(
+      { _id: id },
+      { name: req.body.name, email: req.body.email },
+      { upsert: true },
+      function (err, data) {
+        if (err) return handleError(err);
+        console.log(data);
+
+        res.redirect("users");
       }
-    });
-
-    res.redirect("users");
+    );
   },
   delete: (req, res) => {
     const id = req.params.userId;

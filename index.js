@@ -7,11 +7,19 @@ const port = 3009;
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-// const myLogger = function (req, res, next) {
-//   console.log(req.url);
-//   next();
-// };
-// app.use(myLogger);
+const mongoose = require("mongoose");
+
+main().catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect("mongodb://localhost/db_ejfa");
+}
+
+const myLogger = function (req, res, next) {
+  console.log(req.url);
+  next();
+};
+app.use(myLogger);
 
 app.set("view engine", "ejs");
 
