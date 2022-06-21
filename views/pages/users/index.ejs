@@ -4,10 +4,18 @@
   <body>
     <%- include('../../components/navbar') %>
     <h2>Data Users <%=users.length%></h2>
+    <form action="/users">
+      <div class="input-group">
+        <label>
+          <input type="text" name="keyword" />
+        </label>
+      </div>
+      <button type="submit">Search</button>
+    </form>
     <ul>
       <% if(users.length > 0){ %> <% users.forEach((user) => { %>
       <li>
-        <a href="/users/show/<%=user.id%>"> <%=user.name.toUpperCase() %> </a>
+        <a href="/users/show/<%=user._id%>"> <%=user.name.toUpperCase() %> </a>
       </li>
       <% }) %> <% }else{ %>
       <li>Data empty</li>

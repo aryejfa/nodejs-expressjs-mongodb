@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 
 const User = require("../model/users");
+const logger = require("../utils/Logger");
 
 // let users = [
 //   { id: "1", name: "EKO", email: "eko@gmail.com" },
@@ -45,7 +46,6 @@ module.exports = {
       console.log(data);
 
       const users = data;
-
       res.render("pages/users/index", { users });
     });
   },
@@ -78,7 +78,13 @@ module.exports = {
       },
       function (err, data) {
         if (err) return handleError(err);
-        console.log(data);
+        let message = {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          status: "Register user",
+        };
+        logger.info(`${JSON.stringify(message, null, "\t")}`);
       }
     );
 
@@ -133,14 +139,27 @@ module.exports = {
     //     return user;
     //   }
     // });
-
-    User.update(
+    User.updateOne(
       { _id: id },
       { name: req.body.name, email: req.body.email },
       { upsert: true },
-      function (err, data) {
+      function (err) {
         if (err) return handleError(err);
-        console.log(data);
+
+        // logger.info("Update users", {
+        //   id: `${id}`,
+        //   name: `${req.body.name}`,
+        //   email: `${req.body.email}`,
+        //   status: `Update users id ${id}`,
+        // });
+
+        let message = {
+          _id: id,
+          name: req.body.name,
+          email: req.body.email,
+          status: "Update user",
+        };
+        logger.info(`${JSON.stringify(message, null, "\t")}`);
 
         res.redirect("users");
       }
@@ -161,10 +180,15 @@ module.exports = {
       {
         _id: id,
       },
-      function (err, user) {
+      function (err, data) {
         if (err) throw err;
-
-        console.log("Success");
+        let message = {
+          _id: data._id,
+          name: data.name,
+          email: data.email,
+          status: "Delete user",
+        };
+        logger.info(`${JSON.stringify(message, null, "\t")}`);
       }
     );
 
