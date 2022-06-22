@@ -1,6 +1,7 @@
 const User = require("../model/users");
 
 const logger = require("../utils/Logger");
+const aes256 = require("../utils/Aes256");
 
 const bcrypt = require("bcrypt");
 
@@ -38,25 +39,28 @@ module.exports = {
           });
         }
 
+        const enkrip = aes256.encrypt(
+          jwt.sign(
+            { name: user.name, email: user.email, _id: user._id },
+            "RESTFULAPIs"
+          )
+        );
+
+        // console.log("Ekripsi : " + enkrip);
+
+        // console.log("Deskripsi : " + aes256.decrypt(enkrip));
+
         // const resultJwt = await res.json({
-        //   token: jwt.sign(
-        //     { name: user.name, email: user.email, _id: user._id },
-        //     "RESTFULAPIs"
-        //   ),
+        //   token: enkrip,
         // });
 
         // return resultJwt;
 
         const insertRedis = await RedisClient.set(
           redisKey,
-          JSON.stringify(
-            jwt.sign(
-              { name: user.name, email: user.email, _id: user._id },
-              "RESTFULAPIs"
-            )
-          ),
+          JSON.stringify(enkrip),
           {
-            EX: 120,
+            EX: 60 * 24,
           }
         );
         if (insertRedis) {
