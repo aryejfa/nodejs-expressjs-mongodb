@@ -2,8 +2,11 @@
 <html lang="en">
   <%- include('../../components/header') %>
   <body>
-    <%- include('../../components/navbar') %>
+    <% if(dataTokenJWT){ %> <%- include('../../components/navbar_user') %> <%
+    }else{ %> <%- include('../../components/navbar') %> <% } %>
     <h2>Data Users <%=users.length%></h2>
+
+    <a href="/users/create">Create</a>
     <form action="/users">
       <div class="input-group">
         <label>

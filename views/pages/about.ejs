@@ -2,7 +2,8 @@
 <html lang="en">
   <%- include('../components/header') %>
   <body>
-    <%- include('../components/navbar') %>
+    <% if(dataTokenJWT){ %> <%- include('../components/navbar_user') %> <%
+    }else{ %> <%- include('../components/navbar') %> <% } %>
     <h2>About</h2>
     <%- include('../components/footer') %>
   </body>
