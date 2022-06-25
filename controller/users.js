@@ -24,7 +24,7 @@ module.exports = {
   login: async (req, res) => {
     const dataTokenJWT = await RedisClient.get(redisKey);
 
-    res.render("pages/login", { dataTokenJWT });
+    res.render("pages/login", { page: req.url, dataTokenJWT });
   },
   sign_in: (req, res) => {
     User.findOne(
@@ -88,19 +88,18 @@ module.exports = {
     }
 
     const query = User.find(keyword);
-    query.select("name _id");
+    query.select("name email _id");
     query.exec((err, data) => {
       if (err) return handleError(err);
-      console.log(data);
       const users = data;
 
-      res.render("pages/users/index", { users, dataTokenJWT });
+      res.render("pages/users/index", { page: req.url, users, dataTokenJWT });
     });
   },
   create: async (req, res) => {
     const dataTokenJWT = await RedisClient.get(redisKey);
 
-    res.render("pages/users/create", { dataTokenJWT });
+    res.render("pages/users/create", { page: req.url, dataTokenJWT });
   },
   store: (req, res) => {
     const password_encript = bcrypt.hashSync(req.body.password, 10);
@@ -122,9 +121,8 @@ module.exports = {
     const id = req.params.userId;
     User.findById(id, function (err, data) {
       if (err) return handleError(err);
-      console.log(data);
 
-      res.render("pages/users/show", { users: data, dataTokenJWT });
+      res.render("pages/users/show", { page: req.url, users: data, dataTokenJWT });
     });
   },
   update: (req, res) => {

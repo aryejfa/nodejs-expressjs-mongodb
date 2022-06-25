@@ -51,12 +51,12 @@ app.use("/assets", express.static("public"));
 // ROUTE
 app.get("/", async (req, res) => {
   const dataTokenJWT = await RedisClient.get(redisKey);
-  res.render("pages/index", { dataTokenJWT });
+  res.render("pages/index", { page: req.url, dataTokenJWT });
 });
 
 app.get("/about", async (req, res) => {
   const dataTokenJWT = await RedisClient.get(redisKey);
-  res.render("pages/about", { dataTokenJWT });
+  res.render("pages/about", { page: req.url, dataTokenJWT });
 });
 
 app.use(routerUsers);
