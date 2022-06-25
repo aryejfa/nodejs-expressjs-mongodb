@@ -60,7 +60,7 @@ module.exports = {
           redisKey,
           JSON.stringify(enkrip),
           {
-            EX: 60 * 24,
+            EX: (60 * 60) * 24,
           }
         );
         if (insertRedis) {
@@ -122,7 +122,11 @@ module.exports = {
     User.findById(id, function (err, data) {
       if (err) return handleError(err);
 
-      res.render("pages/users/show", { page: req.url, users: data, dataTokenJWT });
+      res.render("pages/users/show", {
+        page: req.url,
+        users: data,
+        dataTokenJWT,
+      });
     });
   },
   update: (req, res) => {
