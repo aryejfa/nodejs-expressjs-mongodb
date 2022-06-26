@@ -48,7 +48,7 @@
               </div>
             </div>
           </form>
-          <div class="block lg:hidden">
+          <div class="block lg:hidden overflow-x-auto">
             <table class="container">
               <thead class="bg-gray-50">
                 <tr>
@@ -61,14 +61,14 @@
                 <tr class="whitespace-nowrap">
                   <td class="px-6 py-4 text-center">
                     <div
-                      class="text-sm text-gray-900 flex flex-wrap justify-center"
+                      class="text-xs text-gray-900 flex flex-wrap justify-center"
                     >
                       <%=user.name.toUpperCase() %>
                       <br />
                       <%=user.email %>
                       <br />
                       <img
-                        class="w-12"
+                        class="w-12 mt-4"
                         src="data:image/<%=user.img.contentType%>;base64,<%=user.img.data.toString('base64')%>"
                       />
                       <!-- <img
