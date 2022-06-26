@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = 3009;
@@ -18,7 +19,7 @@ const mongoose = require("mongoose");
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://localhost/db_ejfa");
+  await mongoose.connect(process.env.HOST_MONGODB);
 }
 // MONGGODB
 
