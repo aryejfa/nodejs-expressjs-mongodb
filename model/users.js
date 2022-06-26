@@ -5,6 +5,11 @@ const { Schema } = mongoose;
 const userSchema = new Schema(
   {
     name: String,
+    img: {
+      data: Buffer,
+      contentType: String,
+      filename: String,
+    },
     email: String,
     password: String,
   },

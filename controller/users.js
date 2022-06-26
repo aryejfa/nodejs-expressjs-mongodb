@@ -10,6 +10,9 @@ const jwt = require("jsonwebtoken");
 const RedisClient = require("../utils/Redis");
 const redisKey = "redisTokenJWT";
 
+var fs = require("fs");
+var path = require("path");
+
 module.exports = {
   loginRequired: async (req, res, next) => {
     const dataTokenJWT = await RedisClient.get(redisKey);
@@ -60,7 +63,7 @@ module.exports = {
           redisKey,
           JSON.stringify(enkrip),
           {
-            EX: (60 * 60) * 24,
+            EX: 60 * 60 * 24,
           }
         );
         if (insertRedis) {
@@ -88,7 +91,7 @@ module.exports = {
     }
 
     const query = User.find(keyword);
-    query.select("name email _id");
+    query.select("name email img _id");
     query.exec((err, data) => {
       if (err) return handleError(err);
       const users = data;
@@ -102,19 +105,30 @@ module.exports = {
     res.render("pages/users/create", { page: req.url, dataTokenJWT });
   },
   store: (req, res) => {
-    const password_encript = bcrypt.hashSync(req.body.password, 10);
-    User.create(
-      {
-        name: req.body.name,
-        email: req.body.email,
-        password: password_encript,
-      },
-      function (err, data) {
-        if (err) return handleError(err);
+    if (req.body.image != "") {
+      const imgFs = fs.readFileSync(req.file.path);
+      const encode_img = imgFs.toString("base64");
+      const password_encript = bcrypt.hashSync(req.body.password, 10);
+      User.create(
+        {
+          name: req.body.name,
+          img: {
+            contentType: req.file.mimetype,
+            data: Buffer.from(encode_img, "base64"),
+            filename: req.file.filename,
+          },
+          email: req.body.email,
+          password: password_encript,
+        },
+        function (err, data) {
+          if (err) return handleError(err);
 
-        res.redirect("users");
-      }
-    );
+          res.redirect("users");
+        }
+      );
+    } else {
+      res.json("Required file");
+    }
   },
   show: async (req, res) => {
     const dataTokenJWT = await RedisClient.get(redisKey);
@@ -131,27 +145,73 @@ module.exports = {
   },
   update: (req, res) => {
     const id = req.body.id;
-    User.updateOne(
-      { _id: id },
-      { name: req.body.name, email: req.body.email },
-      { upsert: true },
-      function (err) {
-        if (err) return handleError(err);
+    if (req.file != undefined) {
+      User.findOne(
+        {
+          _id: id,
+        },
+        async (err, user) => {
+          if (err) throw err;
+          fs.unlink("./public/uploads/" + user.img.filename, function (err) {
+            if (err) return handleError(err);
+            const imgFs = fs.readFileSync(req.file.path);
+            const encode_img = imgFs.toString("base64");
 
-        res.redirect("users");
-      }
-    );
+            User.updateOne(
+              { _id: id },
+              {
+                name: req.body.name,
+                img: {
+                  contentType: req.file.mimetype,
+                  data: Buffer.from(encode_img, "base64"),
+                  filename: req.file.filename,
+                },
+                email: req.body.email,
+              },
+              { upsert: true },
+              function (err) {
+                if (err) return handleError(err);
+                res.redirect("users");
+              }
+            );
+          });
+        }
+      );
+    } else {
+      User.updateOne(
+        { _id: id },
+        { name: req.body.name, email: req.body.email },
+        { upsert: true },
+        function (err) {
+          if (err) return handleError(err);
+          res.redirect("users");
+        }
+      );
+    }
   },
   delete: (req, res) => {
     const id = req.params.userId;
-    User.findOneAndRemove(
+
+    User.findOne(
       {
         _id: id,
       },
-      function (err, data) {
+      async (err, user) => {
         if (err) throw err;
+        fs.unlink("./public/uploads/" + user.img.filename, function (err) {
+          if (err) return handleError(err);
 
-        res.redirect("../users");
+          User.findOneAndRemove(
+            {
+              _id: id,
+            },
+            function (err, data) {
+              if (err) throw err;
+
+              res.redirect("../users");
+            }
+          );
+        });
       }
     );
   },

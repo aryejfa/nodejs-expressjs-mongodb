@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.EXPRESS_PORT;
 const routerUsers = require("./router/users");
@@ -9,8 +10,8 @@ const RedisClient = require("./utils/Redis");
 const redisKey = "redisTokenJWT";
 
 // PERMISSION BODY
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 // PERMISSION BODY
 
 // MONGGODB
@@ -47,6 +48,7 @@ app.use(function (req, res, next) {
 app.set("view engine", "ejs");
 
 app.use("/assets", express.static("public"));
+app.use("/uploads", express.static("public/uploads"));
 // EJS TEMPLATE
 
 // ROUTE
