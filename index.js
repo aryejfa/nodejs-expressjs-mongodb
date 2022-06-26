@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const port = 3009;
+const port = process.env.EXPRESS_PORT;
 const routerUsers = require("./router/users");
 const jsonwebtoken = require("jsonwebtoken");
 
@@ -19,7 +19,7 @@ const mongoose = require("mongoose");
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(process.env.HOST_MONGODB);
+  await mongoose.connect(process.env.MONGODB_HOST);
 }
 // MONGGODB
 
