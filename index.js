@@ -1,15 +1,19 @@
+require("dotenv").config();
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
-const port = 3009;
+const port = process.env.EXPRESS_PORT;
 const routerUsers = require("./router/users");
 const jsonwebtoken = require("jsonwebtoken");
 
 const RedisClient = require("./utils/Redis");
 const redisKey = "redisTokenJWT";
 
+const path = require('path');
+
 // PERMISSION BODY
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 // PERMISSION BODY
 
 // MONGGODB
@@ -18,7 +22,7 @@ const mongoose = require("mongoose");
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://localhost/db_ejfa");
+  await mongoose.connect(process.env.MONGODB_HOST);
 }
 // MONGGODB
 
@@ -43,9 +47,12 @@ app.use(function (req, res, next) {
 // MIDDLEWARE
 
 // EJS TEMPLATE
+app.set('views', path.join(__dirname, '/hmvc/users/views'));
+
 app.set("view engine", "ejs");
 
 app.use("/assets", express.static("public"));
+app.use("/uploads", express.static("public/uploads"));
 // EJS TEMPLATE
 
 // ROUTE

@@ -4,28 +4,44 @@
   <body>
     <% if(dataTokenJWT){ %> <%- include('../../components/navbar_user') %> <%
     }else{ %> <%- include('../../components/navbar') %> <% } %>
-    <div class="mx-auto mt-8 w-full px-2 sm:px-2 lg:px-4 max-w-xl">
+    <div class="mx-auto mt-8 w-full px-2 sm:px-2 lg:px-4 max-w-xl pt-1">
       <div
-        class="mx-auto mt-8 w-full max-w-container px-4 sm:px-6 lg:px-8 text-center mb-2"
+        class="mx-auto mt-8 w-full max-w-container px-4 sm:px-6 lg:px-8 text-center mb-2 font-bold"
       >
-        <h2>CREATE</h2>
+        <h2>UPDATE</h2>
       </div>
       <form
         method="post"
-        action="/users"
+        action="/users_update"
+        enctype="multipart/form-data"
         class="bg-white shadow-md rounded px-4 pt-6 pb-8 mb-4"
       >
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
             Name
           </label>
+          <input type="hidden" name="id" value="<%=users.id %>" />
           <input
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="name"
             type="text"
             placeholder="Name"
             name="name"
+            value="<%=users.name %>"
             required
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="image">
+            Profile
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="image"
+            type="file"
+            placeholder="Profile"
+            name="image"
+            accept="image/*"
           />
         </div>
         <div class="mb-4">
@@ -38,22 +54,7 @@
             type="text"
             placeholder="Email"
             name="email"
-            required
-          />
-        </div>
-        <div class="mb-6">
-          <label
-            class="block text-gray-700 text-sm font-bold mb-2"
-            for="password"
-          >
-            Password
-          </label>
-          <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="password"
-            type="password"
-            placeholder="******************"
-            name="password"
+            value="<%=users.email %>"
             required
           />
         </div>

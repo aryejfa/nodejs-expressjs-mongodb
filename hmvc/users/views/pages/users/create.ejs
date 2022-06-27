@@ -1,15 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('../components/header') %>
+  <%- include('../../components/header') %>
   <body>
-    <% if(dataTokenJWT){ %> <%- include('../components/navbar_user') %> <%
-    }else{ %> <%- include('../components/navbar') %> <% } %>
-    <div class="mx-auto mt-8 w-full px-2 sm:px-2 lg:px-4 max-w-xl">
+    <% if(dataTokenJWT){ %> <%- include('../../components/navbar_user') %> <%
+    }else{ %> <%- include('../../components/navbar') %> <% } %>
+    <div class="mx-auto mt-8 w-full px-2 sm:px-2 lg:px-4 max-w-xl pt-1">
+      <div
+        class="mx-auto mt-8 w-full max-w-container px-4 sm:px-6 lg:px-8 text-center mb-2 font-bold"
+      >
+        <h2>CREATE</h2>
+      </div>
       <form
-        action="/login"
         method="post"
+        action="/users"
+        enctype="multipart/form-data"
         class="bg-white shadow-md rounded px-4 pt-6 pb-8 mb-4"
       >
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+            Name
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="text"
+            placeholder="Name"
+            name="name"
+            required
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="image"
+          >
+            Profile
+          </label>
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="image"
+            type="file"
+            placeholder="Profile"
+            name="image"
+            required
+            accept="image/*"
+          />
+        </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             Email
@@ -44,7 +80,7 @@
             class="w-full inline-block align-baseline bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            LOGIN
+            SUBMIT
           </button>
         </div>
       </form>
@@ -52,6 +88,6 @@
         &copy;2020 EJFA. All rights reserved.
       </p>
     </div>
-    <%- include('../components/footer') %>
+    <%- include('../../components/footer') %>
   </body>
 </html>
