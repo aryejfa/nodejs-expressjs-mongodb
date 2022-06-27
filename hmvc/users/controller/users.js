@@ -1,13 +1,13 @@
 const User = require("../model/users");
 
-const logger = require("../utils/Logger");
-const aes256 = require("../utils/Aes256");
+const logger = require("../../../utils/Logger");
+const aes256 = require("../../../utils/Aes256");
 
 const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
 
-const RedisClient = require("../utils/Redis");
+const RedisClient = require("../../../utils/Redis");
 const redisKey = "redisTokenJWT";
 
 var fs = require("fs");

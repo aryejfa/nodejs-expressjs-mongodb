@@ -1,24 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controller/users");
-
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now() + ".jpg");
-  },
-});
-const upload = multer({ storage: storage });
+const userController = require("../hmvc/users/controller/users");
+const Upload = require("../utils/Upload");
 
 router.route("/login").get(userController.login).post(userController.sign_in);
 router
   .route("/users")
   .get(userController.loginRequired, userController.index)
   .post(
-    upload.single("image"),
+    Upload.single("image"),
     userController.loginRequired,
     userController.store
   );
@@ -34,7 +24,7 @@ router.get(
 );
 router.post(
   "/users_update",
-  upload.single("image"),
+  Upload.single("image"),
   userController.loginRequired,
   userController.update
 );

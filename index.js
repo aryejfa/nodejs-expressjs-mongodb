@@ -9,6 +9,8 @@ const jsonwebtoken = require("jsonwebtoken");
 const RedisClient = require("./utils/Redis");
 const redisKey = "redisTokenJWT";
 
+const path = require('path');
+
 // PERMISSION BODY
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -45,6 +47,8 @@ app.use(function (req, res, next) {
 // MIDDLEWARE
 
 // EJS TEMPLATE
+app.set('views', path.join(__dirname, '/hmvc/users/views'));
+
 app.set("view engine", "ejs");
 
 app.use("/assets", express.static("public"));
